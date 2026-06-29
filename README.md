@@ -1,9 +1,11 @@
 # ISS Tracker
+🔴 Live Demo: https://iss-tracker-dusky.vercel.app/
+
+<img width="1427" height="676" alt="Screenshot 2026-06-29 at 2 28 39 PM" src="https://github.com/user-attachments/assets/9d5b971f-dd7b-4b4c-bc84-3db164f2fa2d" />
 
 Real-time ISS tracking on a world map with WebSocket-pushed position updates and orbital-mechanics-based visible pass prediction.
 
 ## Architecture
-
 ```
 Open Notify API (every 5 s)
       │
