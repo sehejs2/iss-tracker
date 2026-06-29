@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ISS Tracker — WebSocket test client</title>
+  <style>
+    body { font-family: monospace; padding: 1.5rem; background: #0f0f0f; color: #e0e0e0; }
+    h1 { font-size: 1rem; margin: 0 0 0.5rem; }
+    #status { margin-bottom: 1rem; }
+    .connected    { color: #4caf50; }
+    .disconnected { color: #f44336; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { text-align: left; padding: 0.3rem 0.8rem; border-bottom: 1px solid #2a2a2a; }
+    th { color: #888; font-weight: normal; }
+    tr:first-child td { color: #fff; }
+  </style>
+</head>
+<body>
+  <h1>ISS Tracker — WebSocket test client</h1>
+  <div id="status"><span class="disconnected">● disconnected</span></div>
+  <p style="color:#888;font-size:0.85rem;">
+    Open this file in multiple tabs — all should receive the same broadcast within the same 5 s tick.
+  </p>
+  <table>
+    <thead>
+      <tr><th>#</th><th>latitude</th><th>longitude</th><th>recorded_at (ISS)</th><th>received_at (local)</th></tr>
+    </thead>
+    <tbody id="events"></tbody>
+  </table>
+
+  <script src="http://localhost:3001/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io('http://localhost:3001');
+    const statusEl = document.getElementById('status');
+    const tbody    = document.getElementById('events');
+    let count = 0;
+
+    socket.on('connect', () => {
+      statusEl.innerHTML = `<span class="connected">● connected</span> &nbsp; id: ${socket.id}`;
+    });
+
+    socket.on('disconnect', () => {
+      statusEl.innerHTML = '<span class="disconnected">● disconnected</span>';
+    });
+
+    socket.on('iss:position', position => {
+      count++;
+      const row = document.createElement('tr');
+      row.innerHTML = [
+        count,
+        position.latitude.toFixed(4),
+        position.longitude.toFixed(4),
+        position.recorded_at,
+        new Date().toISOString(),
+      ].map(v => `<td>${v}</td>`).join('');
+
+      // Keep newest row at the top; cap display at 20 rows.
+      tbody.prepend(row);
+      while (tbody.rows.length > 20) tbody.deleteRow(tbody.rows.length - 1);
+    });
+  </script>
+</body>
+</html>
