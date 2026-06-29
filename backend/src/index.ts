@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { createServer } from 'http';
 import express from 'express';
+import cors from 'cors';
 import { Server } from 'socket.io';
 import positionRouter from './routes/position';
 import passPredictionRouter from './routes/passPrediction';
@@ -10,6 +11,10 @@ import { startTleRefresh } from './tle';
 const app = express();
 const PORT = process.env.PORT ?? 3001;
 
+// Allow requests from the Vite dev server and, when deployed, from the
+// production frontend origin set via CORS_ORIGIN.
+const allowedOrigin = process.env.CORS_ORIGIN ?? 'http://localhost:5173';
+app.use(cors({ origin: allowedOrigin }));
 app.use(express.json());
 
 app.get('/health', (_req, res) => {
