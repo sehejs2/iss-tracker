@@ -1,0 +1,27 @@
+{
+  "name": "iss-tracker-backend",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "migrate": "ts-node src/migrate.ts"
+  },
+  "dependencies": {
+    "axios": "^1.18.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "ioredis": "^5.3.2",
+    "node-cron": "^3.0.3",
+    "pg": "^8.11.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.0",
+    "@types/node-cron": "^3.0.11",
+    "@types/pg": "^8.11.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}
