@@ -3,7 +3,9 @@ import { createServer } from 'http';
 import express from 'express';
 import { Server } from 'socket.io';
 import positionRouter from './routes/position';
+import passPredictionRouter from './routes/passPrediction';
 import { startScheduler } from './scheduler';
+import { startTleRefresh } from './tle';
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
@@ -15,6 +17,7 @@ app.get('/health', (_req, res) => {
 });
 
 app.use('/api', positionRouter);
+app.use('/api', passPredictionRouter);
 
 // Wrap Express in a plain HTTP server so Socket.io can share the same port.
 const httpServer = createServer(app);
@@ -29,6 +32,7 @@ io.on('connection', socket => {
 });
 
 startScheduler(io);
+startTleRefresh();
 
 httpServer.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
